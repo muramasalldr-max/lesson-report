@@ -1,0 +1,20 @@
+{
+  "name": "lesson-report",
+  "version": "1.0.0",
+  "description": "ドラムレッスンレポート自動生成ツール",
+  "main": "src/main.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./styles/input.css -o ./styles/report.css --minify",
+    "generate": "node src/main.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^5.17.0",
+    "playwright": "^1.52.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

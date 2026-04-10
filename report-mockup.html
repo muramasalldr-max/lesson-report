@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>レッスンレポート</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: {
+              50:  '#f0f7f1',
+              100: '#d9edd9',
+              200: '#b3dbb5',
+              300: '#80bf85',
+              400: '#4d9e56',
+              500: '#2d7a38',
+              600: '#1e5c28',
+              700: '#184821',
+              800: '#123519',
+              900: '#0c2411',
+            },
+          },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    .header-bg {
+      background: linear-gradient(150deg, #0c2411 0%, #1e5c28 45%, #2d7a38 100%);
+    }
+    .circle-deco-1 {
+      background: radial-gradient(circle, rgba(255,255,255,0.09) 0%, transparent 70%);
+    }
+    .circle-deco-2 {
+      background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    }
+    .song-strip {
+      background: linear-gradient(90deg, #184821 0%, #1e5c28 100%);
+    }
+    body { background-color: #e8e2da; }
+  </style>
+</head>
+<body class="min-h-screen flex items-start justify-center py-12 px-4 font-sans">
+
+  <!-- ===== CARD ===== -->
+  <div class="w-[390px] rounded-3xl overflow-hidden shadow-2xl bg-[#faf8f4]">
+
+    <!-- ── HEADER ── -->
+    <!-- [ux5] ヘッダーの横パディングを px-6 に統一 -->
+    <div class="header-bg relative overflow-hidden px-6 pt-9 pb-7">
+
+      <div class="circle-deco-1 absolute -top-12 -right-12 w-48 h-48 rounded-full"></div>
+      <div class="circle-deco-2 absolute -bottom-16 -left-8 w-56 h-56 rounded-full"></div>
+
+      <p class="relative z-10 text-[11px] tracking-[0.18em] uppercase text-white/70 mb-1">
+        Drum Lesson Report
+      </p>
+
+      <h1 class="relative z-10 font-serif text-[28px] text-white leading-tight">
+        今日のレッスン
+      </h1>
+
+      <!-- 生徒情報 -->
+      <div class="relative z-10 flex items-center gap-4 mt-5">
+        <div class="w-12 h-12 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <ellipse cx="12" cy="11" rx="8" ry="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path stroke-linecap="round" d="M4 11v5c0 2.2 3.6 4 8 4s8-1.8 8-4v-5" />
+            <path stroke-linecap="round" d="M9 7.5 L6 3" />
+            <path stroke-linecap="round" d="M15 7.5 L18 3" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-white font-bold text-[17px] leading-tight">田中 さくら</p>
+          <!-- [ux2] white/55 → white/75 でコントラスト改善 -->
+          <p class="text-white/75 text-[12px] mt-0.5">2026年4月7日（火）</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 課題曲バンド ── -->
+    <!-- [ux5] px-6 に統一 -->
+    <div class="song-strip flex items-center gap-3 px-6 py-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white/70 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M9 3v11.268A3 3 0 1 0 11 17V7h6V3H9Z"/>
+      </svg>
+      <div>
+        <!-- [ux3] 9px → 11px、[ux2] white/50 → white/70 -->
+        <p class="text-[11px] tracking-[0.12em] text-white/70">取り組み中の課題曲</p>
+        <!-- [ux4] font-medium はそのまま（曲名は強調でよい） -->
+        <p class="text-[13px] font-medium text-white mt-0.5">Blinding Lights — The Weeknd</p>
+      </div>
+    </div>
+
+    <!-- ── BODY ── -->
+    <!-- [ux5] px-5 → px-6 に統一 -->
+    <div class="px-6 py-6 flex flex-col gap-4">
+
+      <!-- 本日のレッスン内容 -->
+      <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2 h-2 rounded-full bg-forest-600 flex-shrink-0"></span>
+          <div class="flex items-baseline gap-1.5">
+            <!-- [ux1] 日本語主 + 英語小 -->
+            <span class="text-[13px] font-medium text-stone-700">本日のレッスン</span>
+            <span class="text-[10px] text-stone-300 tracking-wide">Today's Lesson</span>
+          </div>
+        </div>
+        <!-- [ux4] font-light → font-normal -->
+        <p class="text-[13.5px] text-stone-600 leading-relaxed">
+          ハイハット8分音符のコントロール練習。サビのフィルインを3パターン習得。右手と左足の独立性を意識したエクササイズに取り組んだ。
+        </p>
+      </div>
+
+      <!-- よかったところ / 改善ポイント -->
+      <div class="grid grid-cols-2 gap-3">
+
+        <!-- よかったところ -->
+        <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm flex flex-col">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
+            <div>
+              <!-- [ux1] 日本語主 + 英語小 -->
+              <p class="text-[12px] font-medium text-stone-700 leading-none">よかった点</p>
+              <p class="text-[10px] text-stone-300 tracking-wide mt-0.5">Good</p>
+            </div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 mb-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"/>
+          </svg>
+          <!-- [ux4] font-light → font-normal -->
+          <p class="text-[12.5px] text-stone-600 leading-relaxed">
+            テンポキープが安定していた。フィルの入りも自信を持って叩けていた。
+          </p>
+        </div>
+
+        <!-- 改善ポイント -->
+        <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm flex flex-col">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-sky-400 flex-shrink-0"></span>
+            <div>
+              <!-- [ux1] 日本語主 + 英語小 -->
+              <p class="text-[12px] font-medium text-stone-700 leading-none">改善ポイント</p>
+              <p class="text-[10px] text-stone-300 tracking-wide mt-0.5">Next Step</p>
+            </div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-sky-400 mb-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a7 7 0 0 1 5.292 11.584c-.64.8-1.292 1.62-1.292 2.416v1a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-1c0-.796-.652-1.616-1.292-2.416A7 7 0 0 1 12 2Zm2 15H10v1a2 2 0 0 0 4 0v-1Z"/>
+          </svg>
+          <!-- [ux4] font-light → font-normal -->
+          <p class="text-[12.5px] text-stone-600 leading-relaxed">
+            アクセントをより強調するとグルーヴが増す。BPM 90で反復練習しよう。
+          </p>
+        </div>
+
+      </div>
+
+      <!-- 次回レッスン予定日 -->
+      <div class="bg-white rounded-2xl px-4 py-3 border border-stone-100 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-forest-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3V2h-2v2H9V2H8Zm-3 6h14v10H5V8Zm7 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm-4 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm8 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/>
+          </svg>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-[13px] font-medium text-stone-700">次回レッスン予定日</span>
+            <span class="text-[10px] text-stone-300 tracking-wide">Next Date</span>
+          </div>
+        </div>
+        <span class="text-[13px] font-medium text-forest-700">2026年4月14日（火）</span>
+      </div>
+
+      <!-- 次回のレッスン内容 -->
+      <div class="bg-forest-50 rounded-2xl p-4 border border-forest-100 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-forest-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9 2 2 4-4"/>
+          </svg>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-[13px] font-medium text-forest-800">次回のレッスン内容</span>
+            <span class="text-[10px] text-forest-400 tracking-wide">Next Lesson</span>
+          </div>
+        </div>
+        <p class="text-[13.5px] text-forest-900 leading-relaxed">
+          曲を通しで一度合わせる。Bメロのパターンを丁寧に確認。スティックコントロールのストローク練習も継続。
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <!-- [ux5] px-6 はそのまま統一済み -->
+    <div class="px-6 pb-8 flex flex-col items-center gap-2.5">
+      <div class="w-full h-px bg-stone-100"></div>
+      <span class="bg-forest-800 text-white text-[11px] tracking-[0.12em] rounded-full px-5 py-2 font-medium">
+        お疲れさまでした
+      </span>
+      <p class="text-[11px] text-stone-400 text-center leading-relaxed">
+        また次回も一緒に頑張りましょう。
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>

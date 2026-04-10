@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+# 中間生成ファイル（HTML）は除外
+output/*.html
+
+# output/*.png はコミット対象（LINE送信用の公開URLとして使用）
+
+# 環境変数
+.env
+.env.local

@@ -1,0 +1,66 @@
+name: レッスンレポート生成
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 毎日20時JST（UTC 11:00 = JST 20:00）
+  workflow_dispatch:         # 手動実行も可能
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # git push に必要
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 依存パッケージをインストール
+        run: npm ci
+
+      - name: Tailwind CSS ビルド
+        run: npm run build:css
+
+      - name: 日本語フォントをインストール
+        run: |
+          sudo apt-get install -y fonts-noto-cjk
+          sudo fc-cache -fv
+
+      - name: Playwright（Chromium）をインストール
+        run: npx playwright install chromium --with-deps
+
+      - name: レポート生成（Notion取得 → HTML → PNG）
+        run: node src/main.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+      - name: PNG をコミット & プッシュ
+        id: push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/*.png
+          git diff --cached --quiet && echo "変更なし（本日のレッスン記録なし）" && exit 0
+          DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')
+          git commit -m "レポート生成 ${DATE}"
+          git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+
+      - name: LINE に画像を送信（push 完了後）
+        if: steps.push.outputs.pushed == 'true'
+        run: |
+          IMAGE_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/output/${{ steps.push.outputs.date }}.png"
+          node -e "
+            const { sendLine } = require('./src/send-line');
+            sendLine('${IMAGE_URL}')
+              .then(() => process.exit(0))
+              .catch(e => { console.error(e); process.exit(1); });
+          "
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
