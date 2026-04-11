@@ -34,8 +34,10 @@ function formatDateJa(dateStr) {
  * GitHub Actions は UTC で動作するため、JST (UTC+9) に変換して当日日付を算出する
  */
 async function fetchTodayLesson() {
-  const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
-  const today = jst.toISOString().split('T')[0];
+  // DATE_OVERRIDE が指定されていればその日付を使う（テスト用）
+  const today = process.env.DATE_OVERRIDE
+    ? process.env.DATE_OVERRIDE.trim()
+    : new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   // データベースオブジェクトから data_source_id を取得（SDK v5 の仕様）
   const db = await notion.databases.retrieve({
