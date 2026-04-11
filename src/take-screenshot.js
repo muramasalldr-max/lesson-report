@@ -1,7 +1,6 @@
 'use strict';
 
 const { chromium } = require('playwright');
-const fs = require('fs');
 const path = require('path');
 
 /**
@@ -17,10 +16,9 @@ async function takeScreenshot(htmlPath, dateSlug) {
     // 縦長スマホ幅に固定、高さは内容が長くても全体を収めるよう大きめに設定
     await page.setViewportSize({ width: 390, height: 1800 });
 
-    const html = fs.readFileSync(htmlPath, 'utf8');
-
-    // Tailwind CDN・Google Fonts を排除済みのため domcontentloaded で十分
-    await page.setContent(html, { waitUntil: 'domcontentloaded' });
+    // file:// プロトコルで開くことで ../styles/report.css などの相対パスが正しく解決される
+    const absolutePath = path.resolve(htmlPath);
+    await page.goto(`file://${absolutePath}`, { waitUntil: 'domcontentloaded' });
 
     const outputDir = path.join(process.cwd(), 'output');
     const pngPath = path.join(outputDir, `${dateSlug}.png`);
