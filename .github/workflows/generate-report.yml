@@ -41,10 +41,15 @@ jobs:
       - name: PNG をコミット & プッシュ
         id: push
         run: |
+          # PNGファイルが存在しない場合はスキップ（本日のレッスン記録なし）
+          if ! ls output/*.png 1>/dev/null 2>&1; then
+            echo "PNG ファイルが存在しません。本日のレッスン記録がないためスキップします。"
+            exit 0
+          fi
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add output/*.png
-          git diff --cached --quiet && echo "変更なし（本日のレッスン記録なし）" && exit 0
+          git diff --cached --quiet && echo "変更なし（すでにコミット済み）" && exit 0
           DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')
           git commit -m "レポート生成 ${DATE}"
           git push
