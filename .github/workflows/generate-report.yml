@@ -4,11 +4,6 @@ on:
   schedule:
     - cron: '0 11 * * *'   # 毎日20時JST（UTC 11:00 = JST 20:00）
   workflow_dispatch:         # 手動実行も可能
-    inputs:
-      date_override:
-        description: '対象日付（例: 2026-04-05）空欄なら今日のJST日付を使用'
-        required: false
-        default: ''
 
 jobs:
   generate:
@@ -42,7 +37,6 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-          DATE_OVERRIDE: ${{ github.event.inputs.date_override }}
 
       - name: PNG をコミット & プッシュ
         id: push
