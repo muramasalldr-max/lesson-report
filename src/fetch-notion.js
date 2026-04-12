@@ -60,6 +60,9 @@ async function fetchTodayLesson() {
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 
+  // デバッグ: 次回のレッスン内容の生データを確認
+  console.log('[DEBUG] 次回のレッスン内容:', JSON.stringify(props['次回のレッスン内容'] ?? null, null, 2));
+
   return {
     studentInitials: toInitials(fullName),
     date: formatDateJa(lessonDateRaw),
