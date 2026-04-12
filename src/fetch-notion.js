@@ -56,7 +56,8 @@ async function fetchTodayLesson() {
   const page = response.results[0];
   const props = page.properties;
 
-  const fullName = props['生徒名']?.rich_text?.[0]?.plain_text ?? '';
+  // 生徒名はNotionのタイトル列（rich_textではなくtitle型）
+  const fullName = props['生徒名']?.title?.[0]?.plain_text ?? '';
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 

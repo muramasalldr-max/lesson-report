@@ -11,7 +11,9 @@ async function takeScreenshot(htmlPath, dateSlug) {
   const browser = await chromium.launch();
 
   try {
-    const page = await browser.newPage();
+    // deviceScaleFactor: 2 で2倍の解像度（Retina相当）のPNGを生成
+    const context = await browser.newContext({ deviceScaleFactor: 2 });
+    const page = await context.newPage();
 
     // 縦長スマホ幅に固定、高さは内容が長くても全体を収めるよう大きめに設定
     await page.setViewportSize({ width: 390, height: 1800 });
