@@ -60,8 +60,9 @@ async function fetchTodayLesson() {
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 
-  // デバッグ: APIが返す全プロパティ名を確認
-  console.log('[DEBUG] 全プロパティ名:', Object.keys(props));
+  // デバッグ: 生徒名の型を確認
+  console.log('[DEBUG] 生徒名 type:', props['生徒名']?.type ?? 'not found');
+  console.log('[DEBUG] 生徒名 raw:', JSON.stringify(props['生徒名'] ?? null));
 
   return {
     studentInitials: toInitials(fullName),
