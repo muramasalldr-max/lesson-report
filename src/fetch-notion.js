@@ -60,8 +60,8 @@ async function fetchTodayLesson() {
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 
-  // デバッグ: 次回のレッスン内容の生データを確認
-  console.log('[DEBUG] 次回のレッスン内容:', JSON.stringify(props['次回のレッスン内容'] ?? null, null, 2));
+  // デバッグ: 生徒名の生データを確認（型を特定するため）
+  console.log('[DEBUG] 生徒名:', JSON.stringify(props['生徒名'] ?? null, null, 2));
 
   return {
     studentInitials: toInitials(fullName),
@@ -71,7 +71,7 @@ async function fetchTodayLesson() {
     goodPoints: props['今日のよかったところ']?.rich_text?.[0]?.plain_text ?? '',
     improvements: props['もっとよくできる点']?.rich_text?.[0]?.plain_text ?? '',
     nextDate: formatDateJa(nextDateRaw),
-    nextLesson: props['次回のレッスン内容']?.rich_text?.[0]?.plain_text ?? '',
+    nextLesson: props['次回のレッスン内容']?.title?.[0]?.plain_text ?? '',
     dateSlug: today,
   };
 }
