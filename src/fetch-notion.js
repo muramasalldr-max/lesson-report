@@ -17,16 +17,15 @@ function toInitials(name) {
 /**
  * 日付文字列（YYYY-MM-DD）を日本語表記に変換する
  * 例: 「2026-04-07」→「2026年4月7日（火）」
+ * UTC メソッドで処理することでタイムゾーンのズレを防ぐ
  */
 function formatDateJa(dateStr) {
   if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00+09:00');
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
   const days = ['日', '月', '火', '水', '木', '金', '土'];
-  const y = d.getFullYear();
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const w = days[d.getDay()];
-  return `${y}年${m}月${day}日（${w}）`;
+  const w = days[d.getUTCDay()];
+  return `${year}年${month}月${day}日（${w}）`;
 }
 
 /**

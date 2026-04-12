@@ -21,7 +21,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['"Noto Sans JP"', 'sans-serif'],
+        // GitHub Actions の fonts-noto-cjk が提供するフォント名に合わせる
+        sans: ['"Noto Sans CJK JP"', '"Noto Sans JP"', 'sans-serif'],
         serif: ['"Playfair Display"', 'serif'],
       },
     },
