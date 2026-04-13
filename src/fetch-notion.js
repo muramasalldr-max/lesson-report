@@ -55,10 +55,14 @@ async function fetchTodayLesson() {
   const page = response.results[0];
   const props = page.properties;
 
-  // 生徒名はロールアップ（リレーション先の名前を取得）
-  const rollupRaw = props['ロールアップ'];
-  console.log('[DEBUG] ロールアップ:', JSON.stringify(rollupRaw ?? null));
-  const fullName = rollupRaw?.rollup?.array?.[0]?.title?.[0]?.plain_text ?? '';
+  // 生徒名はリレーション → 紐付き先のページタイトルをAPIで取得
+  let fullName = '';
+  const relationId = props['生徒名']?.relation?.[0]?.id;
+  if (relationId) {
+    const studentPage = await notion.pages.retrieve({ page_id: relationId });
+    const titleProp = Object.values(studentPage.properties).find(p => p.id === 'title');
+    fullName = titleProp?.title?.[0]?.plain_text ?? '';
+  }
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 
