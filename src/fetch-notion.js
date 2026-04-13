@@ -6,14 +6,15 @@ const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 /**
  * 名前から苗字 + 「さん」を生成する
- * スペースあり:「杉浦 伸太朗」→「杉浦さん」
- * スペースなし:「杉浦伸太朗」→「杉浦伸太朗さん」（全体 + さん）
+ * 「姓 名」形式（スペース区切り）必須
+ * 例:「杉浦 伸太朗」→「杉浦さん」
+ * スペースなしの場合は個人情報保護のため「?」を返す
  */
 function toDisplayName(name) {
   if (!name) return '?';
   const parts = name.trim().split(/[\s　]+/);
-  const surname = parts[0];
-  return `${surname}さん`;
+  if (parts.length < 2) return '?'; // スペースなし＝姓名が区別できない
+  return `${parts[0]}さん`;
 }
 
 /**
