@@ -47,25 +47,31 @@ jobs:
       - name: PNG をコミット & プッシュ
         id: push
         run: |
+          DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+
           # PNGファイルが存在しない場合はスキップ（本日のレッスン記録なし）
           if ! ls output/*.png 1>/dev/null 2>&1; then
             echo "PNG ファイルが存在しません。本日のレッスン記録がないためスキップします。"
             exit 0
           fi
+
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add output/*.png
-          git diff --cached --quiet && echo "変更なし（すでにコミット済み）" && exit 0
-          DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')
-          git commit -m "レポート生成 ${DATE}"
-          git push
-          echo "pushed=true" >> "$GITHUB_OUTPUT"
-          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+          if git diff --cached --quiet; then
+            echo "変更なし（内容が同じ）"
+          else
+            git commit -m "レポート生成 ${DATE}"
+            git push
+          fi
+          echo "has_png=true" >> "$GITHUB_OUTPUT"
 
-      - name: LINE に画像を送信（push 完了後）
-        if: steps.push.outputs.pushed == 'true'
+      - name: LINE に画像を送信（PNG が生成されていれば常に送信）
+        if: steps.push.outputs.has_png == 'true'
         run: |
-          IMAGE_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/output/${{ steps.push.outputs.date }}.png"
+          DATE="${{ steps.push.outputs.date }}"
+          IMAGE_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/output/${DATE}.png"
           node -e "
             const { sendLine } = require('./src/send-line');
             sendLine('${IMAGE_URL}')
