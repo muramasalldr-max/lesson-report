@@ -32,10 +32,42 @@ function formatDateJa(dateStr) {
 }
 
 /**
- * Notion データベースから当日のレッスン記録を取得する
+ * 1件分の Notion ページデータを整形する
+ */
+async function parsePage(page, today, index) {
+  const props = page.properties;
+
+  // 生徒名はリレーション → 紐付き先のページタイトルをAPIで取得
+  let fullName = '';
+  const relationId = props['生徒名']?.relation?.[0]?.id;
+  if (relationId) {
+    const studentPage = await notion.pages.retrieve({ page_id: relationId });
+    const titleProp = Object.values(studentPage.properties).find(p => p.id === 'title');
+    fullName = titleProp?.title?.[0]?.plain_text ?? '';
+  }
+
+  const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
+  const lessonDateRaw = props['日付']?.date?.start ?? today;
+
+  return {
+    studentInitials: toDisplayName(fullName),
+    date: formatDateJa(lessonDateRaw),
+    songTitle: props['課題曲']?.rich_text?.[0]?.plain_text ?? '',
+    lessonContent: props['本日のレッスン内容']?.rich_text?.[0]?.plain_text ?? '',
+    goodPoints: props['今日のよかったところ']?.rich_text?.[0]?.plain_text ?? '',
+    improvements: props['もっとよくできる点']?.rich_text?.[0]?.plain_text ?? '',
+    nextDate: formatDateJa(nextDateRaw),
+    nextLesson: props['次回のレッスン内容']?.title?.[0]?.plain_text ?? '',
+    dateSlug: today,
+    fileSlug: `${today}-${index + 1}`, // 例: 2026-04-13-1, 2026-04-13-2
+  };
+}
+
+/**
+ * Notion データベースから当日のレッスン記録を全件取得する
  * GitHub Actions は UTC で動作するため、JST (UTC+9) に変換して当日日付を算出する
  */
-async function fetchTodayLesson() {
+async function fetchTodayLessons() {
   const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const today = jst.toISOString().split('T')[0];
 
@@ -53,33 +85,14 @@ async function fetchTodayLesson() {
     },
   });
 
-  if (response.results.length === 0) return null;
+  if (response.results.length === 0) return [];
 
-  const page = response.results[0];
-  const props = page.properties;
+  // 全件を並列で整形（APIコールを含むため Promise.all を使用）
+  const lessons = await Promise.all(
+    response.results.map((page, index) => parsePage(page, today, index))
+  );
 
-  // 生徒名はリレーション → 紐付き先のページタイトルをAPIで取得
-  let fullName = '';
-  const relationId = props['生徒名']?.relation?.[0]?.id;
-  if (relationId) {
-    const studentPage = await notion.pages.retrieve({ page_id: relationId });
-    const titleProp = Object.values(studentPage.properties).find(p => p.id === 'title');
-    fullName = titleProp?.title?.[0]?.plain_text ?? '';
-  }
-  const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
-  const lessonDateRaw = props['日付']?.date?.start ?? today;
-
-  return {
-    studentInitials: toDisplayName(fullName),
-    date: formatDateJa(lessonDateRaw),
-    songTitle: props['課題曲']?.rich_text?.[0]?.plain_text ?? '',
-    lessonContent: props['本日のレッスン内容']?.rich_text?.[0]?.plain_text ?? '',
-    goodPoints: props['今日のよかったところ']?.rich_text?.[0]?.plain_text ?? '',
-    improvements: props['もっとよくできる点']?.rich_text?.[0]?.plain_text ?? '',
-    nextDate: formatDateJa(nextDateRaw),
-    nextLesson: props['次回のレッスン内容']?.title?.[0]?.plain_text ?? '',
-    dateSlug: today,
-  };
+  return lessons;
 }
 
-module.exports = { fetchTodayLesson };
+module.exports = { fetchTodayLessons };

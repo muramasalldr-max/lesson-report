@@ -7,7 +7,7 @@ const path = require('path');
  * 生成した HTML ファイルを Playwright で読み込み、
  * .card-root 要素のみを PNG としてキャプチャする
  */
-async function takeScreenshot(htmlPath, dateSlug) {
+async function takeScreenshot(htmlPath, fileSlug) {
   const browser = await chromium.launch();
 
   try {
@@ -23,7 +23,7 @@ async function takeScreenshot(htmlPath, dateSlug) {
     await page.goto(`file://${absolutePath}`, { waitUntil: 'domcontentloaded' });
 
     const outputDir = path.join(process.cwd(), 'output');
-    const pngPath = path.join(outputDir, `${dateSlug}.png`);
+    const pngPath = path.join(outputDir, `${fileSlug}.png`);
 
     // カードルート要素のみをキャプチャ（背景余白を含まない）
     const card = page.locator('.card-root');

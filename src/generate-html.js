@@ -38,7 +38,9 @@ function generateHtml(data) {
   const outputDir = path.join(process.cwd(), 'output');
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const outPath = path.join(outputDir, `${data.dateSlug}.html`);
+  // fileSlug があれば使用（複数生徒対応）、なければ dateSlug にフォールバック
+  const slug = data.fileSlug ?? data.dateSlug;
+  const outPath = path.join(outputDir, `${slug}.html`);
   fs.writeFileSync(outPath, html, 'utf8');
 
   return outPath;

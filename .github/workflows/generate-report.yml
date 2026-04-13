@@ -35,8 +35,8 @@ jobs:
       - name: 今日の既存PNGを削除（毎回新しく生成するため）
         run: |
           DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')
-          rm -f output/${DATE}.png
-          echo "output/${DATE}.png を削除しました（存在した場合）"
+          rm -f output/${DATE}-*.png output/${DATE}.png
+          echo "output/${DATE}*.png を削除しました（存在した場合）"
 
       - name: レポート生成（Notion取得 → HTML → PNG）
         run: node src/main.js
@@ -71,10 +71,16 @@ jobs:
         if: steps.push.outputs.has_png == 'true'
         run: |
           DATE="${{ steps.push.outputs.date }}"
-          IMAGE_URL="https://raw.githubusercontent.com/${{ github.repository }}/main/output/${DATE}.png"
+          REPO="${{ github.repository }}"
+          BASE_URL="https://raw.githubusercontent.com/${REPO}/main/output"
+          # 今日の日付に一致する PNG ファイルを全件収集して URL リストを生成
+          URLS=$(ls output/${DATE}-*.png output/${DATE}.png 2>/dev/null | \
+            sed "s|output/|${BASE_URL}/|g" | \
+            jq -R . | jq -sc .)
           node -e "
             const { sendLine } = require('./src/send-line');
-            sendLine('${IMAGE_URL}')
+            const urls = ${URLS};
+            sendLine(urls)
               .then(() => process.exit(0))
               .catch(e => { console.error(e); process.exit(1); });
           "
