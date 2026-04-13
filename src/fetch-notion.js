@@ -55,14 +55,10 @@ async function fetchTodayLesson() {
   const page = response.results[0];
   const props = page.properties;
 
-  // 生徒名はNotionのタイトル列（rich_textではなくtitle型）
-  const fullName = props['生徒名']?.title?.[0]?.plain_text ?? '';
+  // 生徒名はロールアップ（リレーション先の名前を取得）
+  const fullName = props['ロールアップ']?.rollup?.array?.[0]?.title?.[0]?.plain_text ?? '';
   const nextDateRaw = props['次回レッスン日']?.date?.start ?? '';
   const lessonDateRaw = props['日付']?.date?.start ?? today;
-
-  // デバッグ: 生徒名の型を確認
-  console.log('[DEBUG] 生徒名 type:', props['生徒名']?.type ?? 'not found');
-  console.log('[DEBUG] 生徒名 raw:', JSON.stringify(props['生徒名'] ?? null));
 
   return {
     studentInitials: toInitials(fullName),
