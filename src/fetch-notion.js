@@ -5,13 +5,15 @@ const { Client } = require('@notionhq/client');
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 /**
- * 日本語の名前からイニシャルを生成する
- * 例: 「田中 さくら」→「田.さ」
+ * 名前から苗字 + 「さん」を生成する
+ * スペースあり:「杉浦 伸太朗」→「杉浦さん」
+ * スペースなし:「杉浦伸太朗」→「杉浦伸太朗さん」（全体 + さん）
  */
-function toInitials(name) {
+function toDisplayName(name) {
   if (!name) return '?';
-  const parts = name.trim().split(/\s+/);
-  return parts.map(p => p.charAt(0)).join('.');
+  const parts = name.trim().split(/[\s　]+/);
+  const surname = parts[0];
+  return `${surname}さん`;
 }
 
 /**
@@ -67,7 +69,7 @@ async function fetchTodayLesson() {
   const lessonDateRaw = props['日付']?.date?.start ?? today;
 
   return {
-    studentInitials: toInitials(fullName),
+    studentInitials: toDisplayName(fullName),
     date: formatDateJa(lessonDateRaw),
     songTitle: props['課題曲']?.rich_text?.[0]?.plain_text ?? '',
     lessonContent: props['本日のレッスン内容']?.rich_text?.[0]?.plain_text ?? '',
