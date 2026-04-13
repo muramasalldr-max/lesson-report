@@ -84,48 +84,37 @@
         </p>
       </div>
 
-      <!-- よかったところ / 改善ポイント -->
-      <div class="grid grid-cols-2 gap-3">
-
-        <!-- よかったところ -->
-        <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm flex flex-col">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
-            <div>
-              <p class="text-[12px] font-medium text-stone-700 leading-none">よかった点</p>
-              <p class="text-[10px] text-stone-300 tracking-wide mt-0.5">Good</p>
-            </div>
+      <!-- よかった点 -->
+      <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-[13px] font-medium text-stone-700">よかった点</span>
+            <span class="text-[10px] text-stone-300 tracking-wide">Good</span>
           </div>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 mb-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z"/>
-          </svg>
-          <p class="text-[12.5px] text-stone-600 leading-relaxed">
-            {{goodPoints}}
-          </p>
         </div>
+        <p class="text-[13.5px] text-stone-600 leading-relaxed">
+          {{goodPoints}}
+        </p>
+      </div>
 
-        <!-- 改善ポイント -->
-        <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm flex flex-col">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="w-2 h-2 rounded-full bg-sky-400 flex-shrink-0"></span>
-            <div>
-              <p class="text-[12px] font-medium text-stone-700 leading-none">改善ポイント</p>
-              <p class="text-[10px] text-stone-300 tracking-wide mt-0.5">Next Step</p>
-            </div>
+      <!-- 改善ポイント -->
+      <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2 h-2 rounded-full bg-sky-400 flex-shrink-0"></span>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-[13px] font-medium text-stone-700">改善ポイント</span>
+            <span class="text-[10px] text-stone-300 tracking-wide">Next Step</span>
           </div>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-sky-400 mb-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2a7 7 0 0 1 5.292 11.584c-.64.8-1.292 1.62-1.292 2.416v1a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-1c0-.796-.652-1.616-1.292-2.416A7 7 0 0 1 12 2Zm2 15H10v1a2 2 0 0 0 4 0v-1Z"/>
-          </svg>
-          <p class="text-[12.5px] text-stone-600 leading-relaxed">
-            {{improvements}}
-          </p>
         </div>
-
+        <p class="text-[13.5px] text-stone-600 leading-relaxed">
+          {{improvements}}
+        </p>
       </div>
 
       <!-- 次回レッスン予定日 -->
-      <div class="bg-white rounded-2xl px-4 py-3 border border-stone-100 shadow-sm flex items-center justify-between">
-        <div class="flex items-center gap-2">
+      <div class="bg-white rounded-2xl px-4 py-3 border border-stone-100 shadow-sm">
+        <div class="flex items-center gap-2 mb-1.5">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-forest-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M8 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3V2h-2v2H9V2H8Zm-3 6h14v10H5V8Zm7 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm-4 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm8 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/>
           </svg>
@@ -134,7 +123,7 @@
             <span class="text-[10px] text-stone-300 tracking-wide">Next Date</span>
           </div>
         </div>
-        <span class="text-[13px] font-medium text-forest-700">{{nextDate}}</span>
+        <p class="text-[15px] font-medium text-forest-700 pl-6">{{nextDate}}</p>
       </div>
 
       <!-- 次回のレッスン内容 -->
