@@ -2,7 +2,7 @@ name: レッスンレポート生成
 
 on:
   schedule:
-    - cron: '0 12 * * *'   # 毎日21時JST（UTC 12:00 = JST 21:00）
+    - cron: '42 11 * * *'   # 毎日20時42分JST（UTC 11:42 = JST 20:42）
   workflow_dispatch:         # 手動実行も可能
 
 jobs:
