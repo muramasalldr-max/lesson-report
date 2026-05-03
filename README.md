@@ -1,6 +1,6 @@
 # レッスンレポート自動化ツール — 進捗まとめ
 
-最終更新: 2026年4月7日
+最終更新: 2026年4月17日
 
 ---
 
@@ -249,13 +249,34 @@ on:
 
 ```
 lesson-report/
-├── report-mockup.html   ← デザインモックアップ（現在ここ）
-└── README.md            ← このファイル
+├── .github/
+│   └── workflows/
+│       └── generate-report.yml   ← GitHub Actions ワークフロー
+├── src/
+│   ├── main.js                   ← メインスクリプト（全体制御）
+│   ├── fetch-notion.js           ← Notion API でレッスン記録取得
+│   ├── generate-html.js          ← HTMLテンプレートへデータ注入
+│   ├── take-screenshot.js        ← Playwright で HTML → PNG 変換
+│   └── send-line.js              ← LINE Messaging API で画像送信
+├── templates/
+│   └── report-template.html      ← レポートHTMLテンプレート（変数プレースホルダー入り）
+├── styles/
+│   └── input.css                 ← Tailwind CSS 入力ファイル
+├── dist/
+│   └── index.html                ← Tailwind CSS ビルド済みHTML
+├── output/
+│   └── YYYY-MM-DD[-N].png        ← 生成されたレポートPNG（日付・連番）
+├── report-mockup.html            ← デザインモックアップ
+├── tailwind.config.js            ← Tailwind 設定（カラー・フォント定義）
+├── package.json
+├── package-lock.json
+├── .gitignore
+└── README.md                     ← このファイル
 ```
 
 ---
 
-## 8. 今後のロードマップ
+## 8. ロードマップ
 
 ```
 Phase 1（完了）
@@ -266,34 +287,33 @@ Phase 2（完了）
   デザイン改善（UI/UXレビュー反映）
   └─ ラベル日本語化・コントラスト改善・パディング統一・フォントウェイト調整
 
-Phase 3（次のステップ）
+Phase 3（完了）
   GitHub リポジトリ作成 & 環境準備
   ├─ lesson-report/ をリポジトリとして初期化
   ├─ GitHub Secrets に4つのキーを登録
   ├─ Tailwind CSS CLI ビルド環境を整える
   └─ HTMLテンプレートの変数プレースホルダーを定義
-       例: {{studentName}} {{date}} {{lessonContent}} ...
 
-Phase 4
+Phase 4（完了）
   Notion API 連携スクリプト作成
   ├─ @notionhq/client で当日レコードを取得
   ├─ dataSources.query() + 日付フィルターで絞り込み
   └─ 取得データをHTMLテンプレートに注入して report.html を生成
 
-Phase 5
+Phase 5（完了）
   Playwright で HTML → PNG 変換
   ├─ fonts-noto-cjk インストール（文字化け対策）
   ├─ page.setContent() + page.screenshot() で report.png を生成
   └─ 生成した PNG をリポジトリにコミット（LINE送信用の公開URL確保）
 
-Phase 6
+Phase 6（完了）
   GitHub Actions ワークフロー構築 & LINE 送信
   ├─ .github/workflows/generate-report.yml 作成
-  ├─ cron スケジュール設定（毎レッスン後の時間帯）
+  ├─ cron スケジュール設定（毎日21時JST）
   ├─ LINE Messaging API で自分宛てに PNG をプッシュ送信
   └─ 動作確認・エラーハンドリング追加
 
-Phase 7（将来）
+Phase 7（完了）
   生徒への直接配布
   └─ 生徒ごとに LINE_USER_ID を管理し、個別送信に拡張
 ```
