@@ -29,8 +29,21 @@ jobs:
           sudo apt-get install -y fonts-noto-cjk
           sudo fc-cache -fv
 
+      - name: Playwright キャッシュ確認
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+
+      - name: Playwright 依存パッケージをインストール
+        run: npx playwright install-deps chromium
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
       - name: Playwright（Chromium）をインストール
-        run: npx playwright install chromium --with-deps
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
 
       - name: 今日の既存PNGを削除（毎回新しく生成するため）
         run: |
