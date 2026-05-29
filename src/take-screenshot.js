@@ -8,7 +8,10 @@ const path = require('path');
  * .card-root 要素のみを PNG としてキャプチャする
  */
 async function takeScreenshot(htmlPath, fileSlug) {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROMIUM_PATH,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 
   try {
     // deviceScaleFactor: 2 で2倍の解像度（Retina相当）のPNGを生成
