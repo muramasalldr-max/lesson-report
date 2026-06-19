@@ -7,13 +7,17 @@
 ## 1. プロジェクト概要
 
 ### 目的
-ドラムレッスンの内容を Notion にまとめたデータをもとに、**生徒ごとのレッスンレポートを自動生成・配布する**ツールを作る。
+ドラムレッスンの内容をもとに、**生徒ごとのレッスンレポートを自動生成・配布する**ツールを作る。
+
+> **データソース移行（2026-06-19）**: レッスン記録の取得元を Notion から
+> `workspace-tool/music-school`（Next.js + Neon PostgreSQL）の `lesson_notes` テーブルへ移行した。
+> Notion 連携（`fetch-notion.js`）は廃止し、`fetch-db.js`（`@neondatabase/serverless`）に置き換え済み。
 
 ### 職業・背景
 - 職業: ドラム講師
-- レッスン管理ツール: Notion
+- レッスン管理ツール: music-school（自作の生徒管理アプリ。Neon PostgreSQL に保存）
 
-### Notion に記録している項目
+### レッスン記録の項目（現在は music-school の `lesson_notes` に保存）
 | 項目 | 内容 |
 |---|---|
 | 生徒名 | レッスンを受けた生徒の名前 |
@@ -171,8 +175,8 @@
 │   または workflow_dispatch（手動実行）                  │
 │              │                                        │
 │              ↓                                        │
-│  [パーツ2] ソース：Notion API                          │
-│   @notionhq/client で当日レコードを取得                 │
+│  [パーツ2] ソース：music-school DB（Neon PostgreSQL）   │
+│   @neondatabase/serverless で当日レコードを取得         │
 │              │                                        │
 │              ↓                                        │
 │  [パーツ3] 処理：Playwright で HTML → PNG              │
@@ -201,13 +205,28 @@ on:
   workflow_dispatch:
 ```
 
-### パーツ2：ソース — Notion API
+### パーツ2：ソース — music-school DB（Neon PostgreSQL）
 
 | 項目 | 内容 |
 |---|---|
-| SDK | `@notionhq/client` v5.x（公式 Node.js SDK） |
-| 注意 | 2025年9月以降、`databases.query()` は非推奨。**`dataSources.query()` を使う** |
-| 認証情報 | GitHub Secrets に `NOTION_TOKEN` と `NOTION_DATABASE_ID` を登録 |
+| ドライバ | `@neondatabase/serverless`（music-school と同じ HTTP ドライバ） |
+| 取得方法 | `lesson_notes` を `students` と JOIN し、当日（JST）の `date` で絞り込み |
+| 日付の扱い | `date` 型は `::text` にキャストして `YYYY-MM-DD` 文字列で受け取る |
+| 並び順 | `students.lesson_time` → `lesson_notes.created_at` で安定ソート（連番が毎回同じになる） |
+| 認証情報 | GitHub Secrets に `DATABASE_URL` を登録 |
+
+#### lesson_notes → レポートの項目対応
+
+| レポート | lesson_notes カラム |
+|---|---|
+| 生徒名 | `students.name`（JOIN） |
+| 日付 | `date` |
+| 課題曲 | `subject` |
+| 本日のレッスン内容 | `lesson_content` |
+| 今日のよかったところ | `positives` |
+| もっとよくできる点 | `improvements` |
+| 次回のレッスン内容 | `next_content` |
+| 次回レッスン日 | `next_date` |
 
 ### パーツ3：処理 — Playwright
 
@@ -238,8 +257,7 @@ on:
 
 | キー名 | 内容 |
 |---|---|
-| `NOTION_TOKEN` | Notion Integration のシークレットトークン |
-| `NOTION_DATABASE_ID` | レッスン記録データベースの ID |
+| `DATABASE_URL` | music-school の Neon PostgreSQL 接続文字列（`postgresql://...`）|
 | `LINE_CHANNEL_ACCESS_TOKEN` | LINE 公式アカウントのチャンネルアクセストークン |
 | `LINE_USER_ID` | 自分の LINE ユーザー ID（`U` から始まる文字列）|
 
@@ -254,7 +272,7 @@ lesson-report/
 │       └── generate-report.yml   ← GitHub Actions ワークフロー
 ├── src/
 │   ├── main.js                   ← メインスクリプト（全体制御）
-│   ├── fetch-notion.js           ← Notion API でレッスン記録取得
+│   ├── fetch-db.js               ← music-school DB（Neon）でレッスン記録取得
 │   ├── generate-html.js          ← HTMLテンプレートへデータ注入
 │   ├── take-screenshot.js        ← Playwright で HTML → PNG 変換
 │   └── send-line.js              ← LINE Messaging API で画像送信

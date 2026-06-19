@@ -40,11 +40,10 @@ jobs:
           rm -f output/${DATE}-*.png output/${DATE}.png
           echo "output/${DATE}*.png を削除しました（存在した場合）"
 
-      - name: レポート生成（Notion取得 → HTML → PNG）
+      - name: レポート生成（DB取得 → HTML → PNG）
         run: node src/main.js
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           CHROMIUM_PATH: /usr/bin/google-chrome
 
       - name: PNG をコミット & プッシュ

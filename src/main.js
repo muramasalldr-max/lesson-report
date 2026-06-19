@@ -1,11 +1,11 @@
 'use strict';
 
-const { fetchTodayLessons } = require('./fetch-notion');
+const { fetchTodayLessons } = require('./fetch-db');
 const { generateHtml }      = require('./generate-html');
 const { takeScreenshot }    = require('./take-screenshot');
 
 // LINE 送信は git push 完了後にワークフローの別ステップで行うため
-// main.js は Notion 取得 → HTML 生成 → PNG 生成 まで担当する
+// main.js は DB 取得 → HTML 生成 → PNG 生成 まで担当する
 
 async function main() {
   console.log('レポート生成を開始します...');
