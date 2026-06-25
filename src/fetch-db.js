@@ -40,7 +40,7 @@ async function fetchTodayLessons() {
   const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
   const today = jst.toISOString().split('T')[0];
 
-  // lesson_time → created_at の順で安定ソートし、連番（fileSlug）が毎回同じになるようにする
+  // lesson_start → created_at の順で安定ソートし、連番（fileSlug）が毎回同じになるようにする
   const rows = await sql`
     SELECT
       s.name             AS student_name,
@@ -54,7 +54,7 @@ async function fetchTodayLessons() {
     FROM lesson_notes ln
     JOIN students s ON s.id = ln.student_id
     WHERE ln.date = ${today}
-    ORDER BY s.lesson_time NULLS LAST, ln.created_at
+    ORDER BY s.lesson_start NULLS LAST, ln.created_at
   `;
 
   if (rows.length === 0) return [];
